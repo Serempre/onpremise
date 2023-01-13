@@ -1,3 +1,6 @@
+# Error reporting choice cache
+.reporterrors
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -33,6 +36,7 @@ var/
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+sentry_install_log*.txt
 
 # Unit test / coverage reports
 htmlcov/
@@ -42,7 +46,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
+*.cover
 .hypothesis/
 
 # Translations
@@ -68,8 +72,32 @@ target/
 # https://docs.docker.com/compose/extends/
 docker-compose.override.yml
 
-# env config
-.env
+# https://docs.docker.com/compose/environment-variables/#using-the---env-file--option
+.env.custom
 
 *.tar
 data/
+
+# Editor / IDE
+.vscode/tags
+.idea
+
+# custom Sentry config
+sentry/sentry.conf.py
+sentry/config.yml
+sentry/*.bak
+sentry/enhance-image.sh
+sentry/requirements.txt
+relay/credentials.json
+relay/config.yml
+symbolicator/config.yml
+geoip/GeoIP.conf
+geoip/*.mmdb
+geoip/.geoipupdate.lock
+
+# wal2json download
+postgres/wal2json
+
+# integration testing
+_integration-test/custom-ca-roots/nginx/*
+sentry/test-custom-ca-roots.py
