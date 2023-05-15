@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -ex
 
-source "$(dirname $0)/../install/_lib.sh"
-
-source ../install/dc-detect-version.sh
+source install/_lib.sh
+source install/dc-detect-version.sh
 
 echo "${_group}Setting up variables and helpers ..."
 export SENTRY_TEST_HOST="${SENTRY_TEST_HOST:-http://localhost:9000}"
@@ -58,7 +57,7 @@ login() {
   if [ "$INITIAL_AUTH_REDIRECT" != "$SENTRY_TEST_HOST/auth/login/sentry/" ]; then
     echo "Initial /auth/login/ redirect failed, exiting..."
     echo "$INITIAL_AUTH_REDIRECT"
-    exit -1
+    exit 1
   fi
 
   CSRF_TOKEN_FOR_LOGIN=$(curl $SENTRY_TEST_HOST -sL -c "$COOKIE_FILE" | awk -F "['\"]" '
@@ -78,7 +77,7 @@ declare -a LOGIN_TEST_STRINGS=(
 )
 for i in "${LOGIN_TEST_STRINGS[@]}"; do
   echo "Testing '$i'..."
-  echo "$LOGIN_RESPONSE" | grep "$i[,}]" >&/dev/null
+  echo "$LOGIN_RESPONSE" | grep "${i}[,}]" >&/dev/null
   echo "Pass."
 done
 echo "${_endgroup}"
@@ -117,7 +116,7 @@ declare -a EVENT_TEST_STRINGS=(
 )
 for i in "${EVENT_TEST_STRINGS[@]}"; do
   echo "Testing '$i'..."
-  echo "$EVENT_RESPONSE" | grep "$i[,}]" >&/dev/null
+  echo "$EVENT_RESPONSE" | grep "${i}[,}]" >&/dev/null
   echo "Pass."
 done
 echo "${_endgroup}"
@@ -131,9 +130,9 @@ echo '------------------------------------------'
 echo "${_endgroup}"
 
 echo "${_group}Test custom CAs work ..."
-source ./custom-ca-roots/setup.sh
+source _integration-test/custom-ca-roots/setup.sh
 $dcr --no-deps web python3 /etc/sentry/test-custom-ca-roots.py
-source ./custom-ca-roots/teardown.sh
+source _integration-test/custom-ca-roots/teardown.sh
 echo "${_endgroup}"
 
 # Table formatting based on https://stackoverflow.com/a/39144364
